@@ -36,7 +36,7 @@ func traverseParsedHTML(node *html.Node, baseUrl *url.URL, links *[]string) {
 				if attr.Key == "href" {
 					href, err := url.Parse(attr.Val)
 					if err != nil {
-						fmt.Printf("traverseParsedHTML::couldn't parse href '%v': %v\n", attr.Val, err)
+						fmt.Printf("traverseParsedHTML::%s::couldn't parse href '%v': %v\n", FormattedErrorText(), attr.Val, err)
 						continue
 					}
 					resolvedURL := baseUrl.ResolveReference(href)
