@@ -1,19 +1,22 @@
 package main
 
 import (
+	"net/url"
 	"reflect"
 	"strings"
 	"testing"
 )
 
+type cases struct {
+	name          string
+	inputURL      string
+	inputBody     string
+	expected      []string
+	errorContains string
+}
+
 func TestGetURLsFromHTML(t *testing.T) {
-	cases := []struct {
-		name          string
-		inputURL      string
-		inputBody     string
-		expected      []string
-		errorContains string
-	}{
+	sliceOfCases := []cases{
 		{
 			name:     "absolute URL",
 			inputURL: "https://blog.boot.dev",
@@ -116,9 +119,14 @@ func TestGetURLsFromHTML(t *testing.T) {
 		},
 	}
 
-	for i, tc := range cases {
+	for i, tc := range sliceOfCases {
 		t.Run(tc.name, func(t *testing.T) {
-			actual, err := getURLsFromHTML(tc.inputBody, tc.inputURL)
+			baseURL, err := url.Parse(tc.inputURL)
+			if err != nil {
+				t.Errorf("Test %v - '%s' FAIL: couldn't parse input URL: %v", i, tc.name, err)
+				return
+			}
+			actual, err := getURLsFromHTML(tc.inputBody, baseURL)
 			if err != nil && !strings.Contains(err.Error(), tc.errorContains) {
 				t.Errorf("Test %v - '%s' FAIL: unexpected error: %v", i, tc.name, err)
 				return
