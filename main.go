@@ -27,13 +27,20 @@ func main() {
 		CHANNEL_LIMIT, err = strconv.Atoi(clArgs[1])
 		if err != nil {
 			fmt.Printf("main::%s::could not convert to int > %s", FormattedErrorText(), err.Error())
+			os.Exit(1)
 		}
 	}
 	if nArgs > 2 {
 		MAX_PAGES, err = strconv.Atoi(clArgs[2])
 		if err != nil {
 			fmt.Printf("main::%s::could not convert to int > %s", FormattedErrorText(), err.Error())
+			os.Exit(1)
 		}
+	}
+
+	if nArgs > 3 {
+		fmt.Printf("too many args")
+		os.Exit(1)
 	}
 
 	var BASE_URL string = clArgs[0]
@@ -55,4 +62,9 @@ func main() {
 	elapsedTime := t.Sub(start)
 	fmt.Println("DONE CRAWLING (in my skin)")
 	fmt.Printf("\x1b[1;35mELAPSED TIME: %.2f SECONDS\x1b[0m\n", elapsedTime.Seconds())
+
+	// for normURL, visis := range cfg.pages {
+	// 	fmt.Printf("\t%d - \x1b[4;34m%s\x1b[0m\n", visis, normURL)
+	// }
+	printReport(cfg.pages, cfg.baseURL.String())
 }
